@@ -10,7 +10,7 @@ output:
 
 ## Loading the data
 
-This project is so interesting and relevant to my life!
+This project is so interesting and relevant to my life! This is a change Ariel made as part of the lab
 
 ```{r, message=FALSE}
 library(tidyverse)
