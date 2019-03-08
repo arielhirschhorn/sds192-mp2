@@ -21,4 +21,15 @@ load("contributions.rda")
 #change1
 ```
 
+```{r}
+incumbents_df <- house_elections %>%
+  filter(incumbent == TRUE, ge_winner == "W")
+```
+
+```{r}
+newcandidates_df <- house_elections %>%
+  filter(incumbent == FALSE, ge_winner == "W")
+```
+
+
 > Word count: `r wordcountaddin::word_count()`
