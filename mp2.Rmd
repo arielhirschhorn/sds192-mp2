@@ -23,13 +23,23 @@ load("contributions.rda")
 
 ```{r}
 incumbents_df <- house_elections %>%
-  filter(incumbent == TRUE, ge_winner == "W")
+  filter(incumbent == TRUE) %>%
+  group_by(ge_winner) %>%
+  summarize(total_winners = n())
 ```
 
 ```{r}
 newcandidates_df <- house_elections %>%
-  filter(incumbent == FALSE, ge_winner == "W")
+filter(incumbent == FALSE, ge_winner != "") %>%
+  group_by(ge_winner) %>%
+  summarize(total_winners = n())
 ```
 
 
 > Word count: `r wordcountaddin::word_count()`
+
+
+```{r}
+
+```
+
