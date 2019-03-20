@@ -44,7 +44,7 @@ filter(incumbent == FALSE, ge_winner != "") %>%
     party != "R" & party != "D" ~ "Ind", TRUE ~ party
   )) %>%
   group_by(ge_winner, party2) %>%
-  summarize(total = n(), contribution = mean(transaction_amt, na.rm = TRUE))
+  summarize(total = n(), avg_contribution = mean(transaction_amt, na.rm = TRUE))
 ```
  
 > Word count: `r wordcountaddin::word_count()`
