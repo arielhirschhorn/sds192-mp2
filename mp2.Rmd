@@ -14,6 +14,7 @@ This project is so interesting and relevant to my life! This is a change Ariel m
 
 ```{r, message=FALSE}
 library(tidyverse)
+library(ggrepel)
 load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
@@ -47,16 +48,22 @@ filter(incumbent == FALSE, ge_winner != "") %>%
     party != "R" & party != "D" ~ "Ind", TRUE ~ party
   )) %>%
   group_by(ge_winner, party2) %>%
-  summarize(total = n(), avg_funding = mean(transaction_amt, na.rm = TRUE))
+  summarize(total = n(), avg_funding = mean(transaction_amt, na.rm = TRUE)) +
+  
 ```
  
 > Word count: `r wordcountaddin::word_count()`
 
 
 ```{r}
-newcandidates_plot <- ggplot(newcandidates_df, aes(x = party2, y = total, fill = party2)) +
+newcandidates_plot <- ggplot(newcandidates_df, aes(x = party2, y = total, fill = party2, label = avg_funding)) +
   scale_fill_manual(values = c("blue", "green", "red")) +
+  labs(fill = "") +
+  xlab("Party") +
+  ylab("Number of Candidates") +
+  ggtitle("New Candidates, Winners and Losers Across Each Party") +
   geom_bar(stat = "identity") +
+  geom_label_repel(fill= "white") +
   facet_wrap(~ge_winner)
 newcandidates_plot
 ```
