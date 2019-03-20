@@ -31,13 +31,23 @@ incumbents_df <- house_elections %>%
 ```{r}
 newcandidates_df <- house_elections %>%
 filter(incumbent == FALSE, ge_winner != "") %>%
-  group_by(ge_winner, party) %>%
-  if(party != "D" &
-    party != "R")
-    {summarize(independent = n())}
+  group_by(ge_winner) %>%
+  if(party != "D" && party != "R")
+  {summarize(independent = tally(party))}
+   
 ```
+ attempt using case_when
 
-
+```{r}
+newcandidates_df <- house_elections %>%
+filter(incumbent == FALSE, ge_winner != "") %>%
+  group_by(ge_winner) %>%
+  mutate(case_when(
+    party != "R" & party != "D" ~ "Ind", TRUE ~ party
+  ))
+   
+```
+ 
 > Word count: `r wordcountaddin::word_count()`
 
 
