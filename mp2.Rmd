@@ -1,6 +1,6 @@
 ---
 title: "Mini-Project 2"
-author: "Your Name Here"
+author: "Roshni and Ariel"
 date: "2019-03-24"
 output: 
   html_document:
@@ -24,15 +24,17 @@ load("contributions.rda")
 ```{r}
 incumbents_df <- house_elections %>%
   filter(incumbent == TRUE) %>%
-  group_by(ge_winner) %>%
-  summarize(total_winners = n())
+  group_by(ge_winner, party) %>%
+  summarize(total = n())
 ```
 
 ```{r}
 newcandidates_df <- house_elections %>%
 filter(incumbent == FALSE, ge_winner != "") %>%
-  group_by(ge_winner) %>%
-  summarize(total_winners = n())
+  group_by(ge_winner, party) %>%
+  if(party != "D" &
+    party != "R")
+    {summarize(independent = n())}
 ```
 
 
