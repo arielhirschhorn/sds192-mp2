@@ -10,9 +10,9 @@ output:
 
 ## Loading the data
 
-This project is so interesting and relevant to my life! This is a change Ariel made as part of the lab
 
-```{r, message=FALSE}
+
+```{r echo = FALSE, message=FALSE}
 library(tidyverse)
 library(ggrepel)
 load("house_elections.rda")
@@ -22,12 +22,7 @@ load("contributions.rda")
 #change1
 ```
 
-```{r}
-incumbents_df <- house_elections %>%
-  filter(incumbent == TRUE) %>%
-  group_by(ge_winner, party) %>%
-  summarize(total = n())
-```
+
 
 
 ```{r}
@@ -38,9 +33,8 @@ candidates_and_contributions <- house_elections %>%
   left_join(contributions2, house_elections, by = c("fec_id" = "cand_id"))
 ```
 
- attempt using case_when
 
-```{r}
+```{r }
 newcandidates_df <- candidates_and_contributions %>%
 filter(incumbent == FALSE, ge_winner != "") %>%
   group_by(ge_winner) %>%
@@ -48,12 +42,18 @@ filter(incumbent == FALSE, ge_winner != "") %>%
     party != "R" & party != "D" ~ "Ind", TRUE ~ party
   )) %>%
   group_by(ge_winner, party2) %>%
-  summarize(total = n(), avg_funding = mean(transaction_amt, na.rm = TRUE)) +
+  summarize(total = n(), avg_funding = mean(transaction_amt, na.rm = TRUE))
   
+incumbents_df <- candidates_and_contributions %>%
+filter(incumbent == TRUE, ge_winner != "") %>%
+  group_by(ge_winner) %>%
+  mutate(party2 = case_when(
+    party != "R" & party != "D" ~ "Ind", TRUE ~ party
+  )) %>%
+  group_by(ge_winner, party2) %>%
+  summarize(total = n(), avg_funding = mean(transaction_amt, na.rm = TRUE)) 
 ```
  
-> Word count: `r wordcountaddin::word_count()`
-
 
 ```{r}
 newcandidates_plot <- ggplot(newcandidates_df, aes(x = party2, y = total, fill = party2, label = avg_funding)) +
@@ -65,6 +65,17 @@ newcandidates_plot <- ggplot(newcandidates_df, aes(x = party2, y = total, fill =
   geom_bar(stat = "identity") +
   geom_label_repel(fill= "white") +
   facet_wrap(~ge_winner)
+
+incumbents_plot <- ggplot(incumbents_df, aes(x = party2, y = total, fill = party2, label = avg_funding)) +
+  scale_fill_manual(values = c("blue", "green", "red")) +
+  labs(fill = "") +
+  xlab("Party") +
+  ylab("Number of Candidates") +
+  ggtitle("Incumbents, Winners and Losers Across Each Party") +
+  geom_bar(stat = "identity") +
+  geom_label_repel(fill= "white") +
+  facet_wrap(~ge_winner)
+incumbents_plot
 newcandidates_plot
 ```
 
