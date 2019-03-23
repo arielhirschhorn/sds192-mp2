@@ -4,12 +4,8 @@ author: "Roshni and Ariel"
 date: "2019-03-24"
 output: 
   html_document:
-    code_folding: show
+    code_folding: hide
 ---
-
-
-## Loading the data
-
 
 
 ```{r echo = FALSE, message=FALSE}
@@ -22,7 +18,7 @@ load("contributions.rda")
 #change1
 ```
 
-
+##Introduction
 
 
 ```{r}
@@ -54,7 +50,7 @@ filter(incumbent == TRUE, ge_winner != "") %>%
   summarize(total = n(), avg_funding = mean(transaction_amt, na.rm = TRUE)) 
 ```
  
-
+##Data Graphics
 ```{r}
 newcandidates_plot <- ggplot(newcandidates_df, aes(x = party2, y = total, fill = party2, label = avg_funding)) +
   scale_fill_manual(values = c("blue", "green", "red")) +
