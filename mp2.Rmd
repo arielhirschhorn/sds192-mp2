@@ -22,7 +22,7 @@ load("contributions.rda")
 #change1
 ```
 
-
+Our goal in this project was to compare incumbent candidate wins and losses versus new candidate wins and losses, with an added label of average funding for each candidate. 
 
 
 ```{r}
@@ -32,7 +32,7 @@ contributions2 <- contributions %>%
 candidates_and_contributions <- house_elections %>%
   left_join(contributions2, house_elections, by = c("fec_id" = "cand_id"))
 ```
-
+We started wrangling our data set by adding up the total donations for each candidate through using group_by and summarize. Then, we did a left join of the summary dataframe and the house_elections dataset to get the candidates and total contributions into one dataframe. The data was able to be joined because they both included a candidate ID.
 
 ```{r }
 newcandidates_df <- candidates_and_contributions %>%
@@ -53,7 +53,7 @@ filter(incumbent == TRUE, ge_winner != "") %>%
   group_by(ge_winner, party2) %>%
   summarize(total = n(), avg_funding = mean(transaction_amt, na.rm = TRUE)) 
 ```
- 
+ Then, we created two new dataframes, one for new candidates and one for incumbents. After we grouped all the candidates based on whether they won or lost, we wanted to sum up all the independent parties (i.e not Republican or Democratic) into one so we did this using a case_when statement and used mutate 
 
 ```{r}
 newcandidates_plot <- ggplot(newcandidates_df, aes(x = party2, y = total, fill = party2, label = avg_funding)) +
