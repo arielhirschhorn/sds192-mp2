@@ -8,9 +8,9 @@ output:
 ---
 
 ##Introduction
-This project seeks to determine incumbent candidates’ success across parties and to compare the contributions given to incumbent vs new candidates. The inclusion of contributions allows us to understand which type of candidate campaign donators were focused on whether they had positive or negative intentions. To do this the FEC dataset was used, which features data on the candidates that ran in the 2012 elections, such as party, and whether they won as well as other information such as contributions made in their name. It is important to recognize that in the 2012 election the Republicans won the house majority from the Democrats, who had earned it in the 2010 electiondem For the purposes of this project we focused specifically on whether candidates won or lost the election, whether they are incumbent, their party and all the contributions made in the candidate’s name.
+This project seeks to determine incumbent and new candidates’ success across parties and to compare the contributions given to incumbent vs new candidates. The inclusion of contributions allows us to understand the average amount of funding for each party, and whether higher amounts of funding correlated with more winners. To do this, we used the FEC dataset, which features data on the candidates that ran in the 2012 elections, such as party, win or loss, and donor contributions made in their name. It is important to recognize that in the 2012 election the Republicans won the house majority from the Democrats, who had earned it in the 2010 election. For the purposes of this project we focused specifically on whether candidates won or lost the election, whether they are incumbent, their party and all the contributions made in the candidate’s name.
 
-```{r echo = FALSE, message=FALSE}
+```{r message=FALSE, warning = FALSE}
 library(tidyverse)
 library(ggrepel)
 load("house_elections.rda")
@@ -19,6 +19,7 @@ load("committees.rda")
 load("contributions.rda")
 #change1
 ```
+
 
 
 ```{r message = FALSE}
@@ -31,7 +32,7 @@ contributions2 <- contributions %>%
 candidates_and_contributions <- house_elections %>%
   left_join(contributions2, house_elections, by = c("fec_id" = "cand_id"))
 ```
-
+We started wrangling our data set by adding up the total donations for each candidate through using group_by and summarize. Then, we did a left join of the summary dataframe and the house_elections dataset to get the candidates and total contributions into one dataframe. The data was able to be joined because they both included a candidate ID.
 
 ```{r message = FALSE}
 #filters new candidates and summarizes total number of winners and loser in R.D.I and avg funding raised 
@@ -54,6 +55,9 @@ filter(incumbent == TRUE, ge_winner != "") %>%
   group_by(ge_winner, party2) %>%
   summarize(total = n(), avg_funding = mean(transaction_amt, na.rm = TRUE)) 
 ```
+
+Then, we created two new dataframes, one for new candidates and one for incumbents. After we grouped all the candidates based on whether they were new candidates or incumbents, we wanted to sum up all the independent parties (i.e not Republican or Democratic) into one category. We did this using a case_when statement to include all of the candidates that weren't "D" or "R" inside of the mutate function to create a new category. Then, we added up the total number of winning and losing candidates for Republicans, Democrats, and Independents. We also wanted to demonstrate the average amount of funding each candidate received, so in the summarize function, we took the mean of the transaction amount per candidate for each party.
+
  
 ##Data Graphics
 ```{r message = FALSE}
@@ -80,7 +84,8 @@ incumbents_plot
 newcandidates_plot 
 ```
 
+For our data graphic, we thought a colored bar graph would be the best way to show a comparison of the three parties, since our dataset has to do with the amount of candidates in each category and people have strong color associations with different parties (blue for Democrats, red for Republicans). We wanted to include the data from the contributions dataframe, and after much thought, we decided that a label on each bar for the average funding for candidates would be the most effective. 
+
 
 ##Conclusion
-  These graphics demonstrate that Incumbent candidates are voted into office more frequently across the board, with republicans voting in only slightly more incumbent candidates in comparison to Democrats and demonstrates that incumbent candidates garner more funding then new candidates. The republicans selecting more incumbents could be indicative of a party demographic that is more established and traditional, however the larger number could also be caused by the Republican house majority that was won in the 2012 election. In future work using this dataset it may be useful to use the percentage of republican representatives as opposed to numbers, especially since republicans also demonstrated a higher loss for incumbent candidates than Democrats. This data also demonstrates that more money is spent on incumbents as opposed to new candidates; Incumbents seem to have almost an order of magnitude more funding in comparison to their new candidate counterparts. This is logical in tandem with the rest of the data as more money would be put towards the candidate that is more likely to win, and as this data shows, incumbent candidates have a significantly higher rate of victory than new candidates. This is corroborated by the fact that new candidate winners also have more funding than new candidate losers. Since they would have already have been shown to be popular in polls.  Something else that contributed to this could be that more money was put into the candidate in the form of contributions against a candidate because it is more difficult to remove a candidate who was already elected previously. This could explain why the highest average contributions were towards losing incumbents. Additionally, this data seems to indicate that for incumbents specifically more contributions can have a negative effect on campaign success, since the numbers were largest for incumbent losers, although it has the opposite effect for new candidates.  This could possibly be because as the funding contributed to a candidate, the fraction of the total contributions that go toward negative funding is larger, however there is not enough evidence in our data to suggest that. Ultimately this data demonstrates that in elections there is a larger focus on incumbent candidates as opposed to new candidates both from contributors and from voters.
-  
+  These graphics demonstrate that Incumbent candidates are voted into office more frequently across the board, with republicans voting in only slightly more incumbent candidates in comparison to Democrats and demonstrates that incumbent candidates garner more funding then new candidates. The Republicans selecting more incumbents could be indicative of a party demographic that is more established and traditional, however the larger number could also be caused by the Republican house majority that was won in the 2012 election. In future work using this dataset it may be useful to use the percentage of republican representatives as opposed to numbers, especially since republicans also demonstrated a higher loss for incumbent candidates than Democrats. This data also demonstrates that more money is spent on incumbents as opposed to new candidates; Incumbents seem to have almost an order of magnitude more funding in comparison to their new candidate counterparts. This is logical in tandem with the rest of the data as more money would be put towards the candidate that is more likely to win, and as this data shows, incumbent candidates have a significantly higher rate of victory than new candidates. This is corroborated by the fact that new candidate winners also have more funding than new candidate losers. Since they would have already have been shown to be popular in polls.  Something else that contributed to this could be that more money was put into the candidate in the form of contributions against a candidate because it is more difficult to remove a candidate who was already elected previously. This could explain why the highest average contributions were towards losing incumbents. Additionally, this data seems to indicate that for incumbents specifically more contributions can have a negative effect on campaign success, since the numbers were largest for incumbent losers, although it has the opposite effect for new candidates.  This could possibly be because as the funding contributed to a candidate, the fraction of the total contributions that go toward negative funding is larger, however there is not enough evidence in our data to suggest that. Ultimately this data demonstrates that in elections there is a larger focus on incumbent candidates as opposed to new candidates both from contributors and from voters.
