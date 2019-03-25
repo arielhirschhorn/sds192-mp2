@@ -4,12 +4,8 @@ author: "Roshni and Ariel"
 date: "2019-03-24"
 output: 
   html_document:
-    code_folding: show
+    code_folding: hide
 ---
-
-
-## Loading the data
-
 
 
 ```{r echo = FALSE, message=FALSE}
@@ -22,7 +18,10 @@ load("contributions.rda")
 #change1
 ```
 
+<<<<<<< HEAD
 Our goal in this project was to compare incumbent candidate wins and losses versus new candidate wins and losses, with an added label of average funding for each candidate. 
+=======
+##Introduction
 
 
 ```{r}
@@ -53,8 +52,12 @@ filter(incumbent == TRUE, ge_winner != "") %>%
   group_by(ge_winner, party2) %>%
   summarize(total = n(), avg_funding = mean(transaction_amt, na.rm = TRUE)) 
 ```
- Then, we created two new dataframes, one for new candidates and one for incumbents. After we grouped all the candidates based on whether they won or lost, we wanted to sum up all the independent parties (i.e not Republican or Democratic) into one so we did this using a case_when statement and used mutate 
 
+ Then, we created two new dataframes, one for new candidates and one for incumbents. After we grouped all the candidates based on whether they were new candidates or incumbents, we wanted to sum up all the independent parties (i.e not Republican or Democratic) into one category. We did this using a case_when statement to include all of the candidates that weren't "D" or "R" inside of the mutate function to create a new category. Then, we added up the total number of winning and losing candidates for Republicans, Democrats, and Independents. We also wanted to demonstrate the average amount of funding each candidate received, so in the summarize function, we took the mean of the transaction amount per candidate for each party.
+
+=======
+ 
+##Data Graphics
 ```{r}
 newcandidates_plot <- ggplot(newcandidates_df, aes(x = party2, y = total, fill = party2, label = avg_funding)) +
   scale_fill_manual(values = c("blue", "green", "red")) +
@@ -78,7 +81,13 @@ incumbents_plot <- ggplot(incumbents_df, aes(x = party2, y = total, fill = party
 incumbents_plot
 newcandidates_plot
 ```
+For our data graphic, we thought a colored bar graph would be the best way to show a comparison of the three parties, since our dataset has to do with the amount of candidates in each category and people have strong color associations with different parties (blue for Democrats, red for Republicans). We wanted to include the data from the contributions dataframe, and after much thought, we decided that a label on each bar for the average funding for candidates would be the most effective. 
 
+#Analysis
+
+Looking at our two graphs side by side, it's clear that incumbents have far more winners than new candidates, and that there are far more independent new candidates than incumbents. This clearly demonstrates that in this election year, voters prioritized candidates already in office over newer candidates. It also demonstrated that 
+
+As for funding, independent candidates received far less average funding than the two bigger parties. Even t
 
 
 
